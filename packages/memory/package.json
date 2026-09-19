@@ -1,0 +1,9 @@
+{
+  "name": "@klip/memory",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Local history/preferences/usage repository. Baseline build: plaintext JSON file, NOT the AES-GCM+DPAPI-encrypted SQLite schema in docs/04-SDD.md section 8 (tracked follow-up).",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts"
+}

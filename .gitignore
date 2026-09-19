@@ -1,0 +1,13 @@
+node_modules/
+dist/
+out/
+build/
+.vite/
+*.log
+.env
+.env.local
+.DS_Store
+Thumbs.db
+klip-data/
+*.riv.tmp
+release/

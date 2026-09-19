@@ -1,0 +1,53 @@
+@import './tokens.css';
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  background: transparent;
+  overflow: hidden;
+  font-family: var(--klip-font);
+  color: var(--klip-text-primary);
+  -webkit-font-smoothing: antialiased;
+  font-variant-numeric: tabular-nums;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+button:focus-visible,
+input:focus-visible,
+[tabindex]:focus-visible {
+  outline: none;
+  box-shadow: var(--klip-focus-ring);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: #2a2f39;
+  border-radius: 8px;
+}
+
+.klip-app {
+  width: 100vw;
+  height: 100vh;
+  -webkit-app-region: drag;
+  display: flex;
+  flex-direction: column;
+}
+
+.klip-app button,
+.klip-app input,
+.klip-app a,
+.klip-app [data-no-drag] {
+  -webkit-app-region: no-drag;
+}

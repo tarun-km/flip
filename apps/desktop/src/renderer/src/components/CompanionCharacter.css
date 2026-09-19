@@ -1,0 +1,174 @@
+.klip-character {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 4px 18px rgba(142, 216, 197, 0.18));
+}
+
+.klip-character svg {
+  overflow: visible;
+}
+
+/* --- body & ring --- */
+.klip-body {
+  fill: url(#klip-body-gradient);
+  stroke: rgba(255, 255, 255, 0.06);
+  stroke-width: 1;
+  transform-origin: 80px 92px;
+  animation: klip-breathe 4.2s ease-in-out infinite;
+}
+
+.klip-ring {
+  fill: none;
+  stroke: var(--klip-accent);
+  stroke-width: 2.5;
+  opacity: 0;
+  transform-origin: 80px 90px;
+  transition: opacity var(--klip-transition-slow);
+}
+
+.klip-ear {
+  fill: url(#klip-body-gradient);
+  stroke: rgba(255, 255, 255, 0.06);
+}
+
+.klip-antenna-stem {
+  stroke: var(--klip-accent);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.klip-antenna-gem {
+  fill: var(--klip-accent);
+  transform-origin: 80px 24px;
+  animation: klip-gem-pulse 2.6s ease-in-out infinite;
+}
+
+.klip-eye {
+  fill: #0c1013;
+  transition: transform 90ms ease-out;
+  transform-origin: center;
+}
+
+.klip-pupil {
+  fill: var(--klip-text-primary);
+}
+
+.klip-character[data-blink='true'] .klip-eye {
+  transform: scaleY(0.08);
+}
+
+.klip-mouth {
+  fill: #0c1013;
+  stroke: none;
+}
+
+.klip-mouth-line {
+  fill: none;
+  stroke: #0c1013;
+  stroke-width: 3.5;
+  stroke-linecap: round;
+}
+
+/* --- state modifiers --- */
+.klip-character[data-state='listening'] .klip-ring {
+  opacity: 1;
+  animation: klip-listen-pulse 1.6s ease-in-out infinite;
+}
+
+.klip-character[data-state='thinking'] .klip-ring {
+  opacity: 0.8;
+  stroke-dasharray: 10 14;
+  animation: klip-think-spin 1.8s linear infinite;
+}
+
+.klip-character[data-state='acting'] .klip-ring {
+  opacity: 0.9;
+  stroke: var(--klip-accent);
+  stroke-dasharray: 4 8;
+  animation: klip-think-spin 1s linear infinite;
+}
+
+.klip-character[data-state='awaiting-approval'] .klip-ring {
+  opacity: 1;
+  stroke: var(--klip-attention);
+  animation: klip-listen-pulse 1.1s ease-in-out infinite;
+}
+
+.klip-character[data-state='error'] .klip-body {
+  animation: klip-shake 420ms ease-in-out 1, klip-breathe 4.2s ease-in-out infinite 420ms;
+}
+
+.klip-character[data-state='error'] .klip-ring {
+  opacity: 0.9;
+  stroke: var(--klip-error);
+}
+
+.klip-character[data-state='success'] .klip-ring {
+  opacity: 0.9;
+  stroke: var(--klip-accent);
+  animation: klip-success-ring 900ms ease-out 1;
+}
+
+.klip-sparkles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 30% 25%, rgba(142, 216, 197, 0.5) 0%, transparent 3%),
+    radial-gradient(circle at 70% 30%, rgba(255, 208, 137, 0.45) 0%, transparent 3%),
+    radial-gradient(circle at 55% 70%, rgba(142, 216, 197, 0.4) 0%, transparent 3%);
+  animation: klip-sparkle-fade 900ms ease-out 1;
+}
+
+/* --- reduced motion: keep state readable through shape only --- */
+@media (prefers-reduced-motion: reduce) {
+  .klip-body,
+  .klip-antenna-gem,
+  .klip-ring {
+    animation: none !important;
+  }
+  .klip-character[data-state='listening'] .klip-ring,
+  .klip-character[data-state='thinking'] .klip-ring,
+  .klip-character[data-state='acting'] .klip-ring,
+  .klip-character[data-state='awaiting-approval'] .klip-ring {
+    opacity: 1;
+  }
+}
+.klip-character[data-reduced-motion='true'] .klip-body,
+.klip-character[data-reduced-motion='true'] .klip-antenna-gem {
+  animation: none;
+}
+
+@keyframes klip-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.015); }
+}
+@keyframes klip-gem-pulse {
+  0%, 100% { opacity: 0.75; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.18); }
+}
+@keyframes klip-listen-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.55; }
+  50% { transform: scale(1.06); opacity: 1; }
+}
+@keyframes klip-think-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes klip-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
+}
+@keyframes klip-success-ring {
+  0% { transform: scale(0.9); opacity: 1; }
+  100% { transform: scale(1.25); opacity: 0; }
+}
+@keyframes klip-sparkle-fade {
+  0% { opacity: 0; }
+  30% { opacity: 1; }
+  100% { opacity: 0; }
+}

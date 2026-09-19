@@ -1,0 +1,9 @@
+{
+  "name": "@klip/agent-runtime",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Local router, Strands-shaped supervisor/desktop/conversation agents, and the desktop mutation/approval orchestrator (see docs/05-AGENT-WORKFORCE.md).",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts"
+}

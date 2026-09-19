@@ -1,0 +1,9 @@
+{
+  "name": "@klip/contracts",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Authoritative runtime schemas and shared types for KLIP (see docs/10-API-CONTRACTS.md)",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts"
+}

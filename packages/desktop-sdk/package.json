@@ -1,0 +1,9 @@
+{
+  "name": "@klip/desktop-sdk",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Reusable TypeScript desktop SDK (see docs/10-API-CONTRACTS.md section 5). Baseline build: local execution adapter stands in for the native C#/UIA helper (native/Klip.Windows, not yet built).",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts"
+}

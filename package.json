@@ -1,0 +1,30 @@
+{
+  "name": "klip",
+  "private": true,
+  "version": "0.1.0",
+  "description": "KLIP - Windows voice companion and desktop SDK (H24 baseline)",
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "examples/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=@klip/desktop",
+    "build": "npm run build --workspace=@klip/desktop",
+    "typecheck": "tsc -b --noEmit || true",
+    "sdk-cli": "tsx examples/sdk-cli/index.ts"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "tsx": "^4.19.1",
+    "@types/node": "^22.9.0"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "allowScripts": {
+    "electron@32.3.3": true,
+    "esbuild@0.21.5": true,
+    "esbuild@0.28.2": true
+  }
+}

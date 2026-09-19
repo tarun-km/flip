@@ -1,0 +1,8 @@
+{
+  "name": "@klip/sdk-cli",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Independent SDK demonstration client — no Electron, React, Rive or agent runtime required (docs/03-SRS.md FR-D-01, AC-10).",
+  "type": "module",
+  "bin": { "klip-cli": "index.ts" }
+}
