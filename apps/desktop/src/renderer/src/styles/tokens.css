@@ -9,9 +9,16 @@
   --klip-error: #ff9c9c;
   --klip-radius: 20px;
   --klip-font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --klip-font-display: Georgia, 'Iowan Old Style', ui-serif, serif;
   --klip-focus-ring: 0 0 0 2px var(--klip-accent);
   --klip-transition-fast: 180ms cubic-bezier(0.22, 1, 0.36, 1);
   --klip-transition-slow: 280ms cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Bento dashboard duotone (teal/amber), for stat tiles in HistoryUsagePanel. */
+  --klip-bento-teal: linear-gradient(155deg, #bdf1e3 0%, var(--klip-accent) 65%, #4f9d8c 100%);
+  --klip-bento-amber: linear-gradient(155deg, #ffe6bd 0%, var(--klip-attention) 65%, #d99a3f 100%);
+  --klip-bento-ink: #0c1013;
+  --klip-card-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 }
 
 @media (prefers-reduced-motion: reduce) {

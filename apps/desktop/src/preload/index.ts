@@ -18,6 +18,15 @@ const api = {
   setHistoryEnabled: (enabled: boolean) => ipcRenderer.invoke('klip:setHistoryEnabled', { enabled }),
   setExpanded: (expandedState: boolean) => ipcRenderer.invoke('klip:setExpanded', { expanded: expandedState }),
 
+  getKeyStatus: () => ipcRenderer.invoke('klip:getKeyStatus'),
+  setApiKey: (name: 'anthropic' | 'openai', apiKey: string) => ipcRenderer.invoke('klip:setApiKey', { name, apiKey }),
+  deleteApiKey: (name: 'anthropic' | 'openai') => ipcRenderer.invoke('klip:deleteApiKey', { name }),
+
+  getShortcut: () => ipcRenderer.invoke('klip:getShortcut'),
+  setShortcut: (accelerator: string) => ipcRenderer.invoke('klip:setShortcut', { accelerator }),
+  suspendShortcut: () => ipcRenderer.invoke('klip:suspendShortcut'),
+  resumeShortcut: () => ipcRenderer.invoke('klip:resumeShortcut'),
+
   onEvent: (callback: (event: unknown) => void) => {
     const listener = (_evt: unknown, payload: unknown) => callback(payload);
     ipcRenderer.on('klip:event', listener);

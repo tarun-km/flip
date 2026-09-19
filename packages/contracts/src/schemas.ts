@@ -70,5 +70,24 @@ export const ForgetHistorySchema = z
   })
   .strict();
 
+export const SetApiKeySchema = z
+  .object({
+    name: z.enum(['anthropic', 'openai']),
+    apiKey: z.string().max(4000),
+  })
+  .strict();
+
+export const DeleteApiKeySchema = z
+  .object({
+    name: z.enum(['anthropic', 'openai']),
+  })
+  .strict();
+
+export const SetShortcutSchema = z
+  .object({
+    accelerator: z.string().min(1).max(64),
+  })
+  .strict();
+
 export type SubmitIntentInput = z.infer<typeof SubmitIntentSchema>;
 export type ResolveApprovalInput = z.infer<typeof ResolveApprovalSchema>;

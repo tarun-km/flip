@@ -21,8 +21,12 @@ npm run dev --workspace=@klip/desktop
 - **No native helper:** see `native/Klip.Windows/README.md`. Only
   app-launch / file-reveal / file-open / file-writeText / browser-search are
   real; `ui.*` UIA actions return `UNSUPPORTED_CAPABILITY` honestly.
-- **No cloud:** see `cloud/cognition/README.md`. Open-ended conversation
-  says so instead of fabricating an answer.
+- **No AWS-metered cloud:** see `cloud/cognition/README.md`. Open-ended
+  conversation instead calls Anthropic directly with a key you provide in
+  Settings (`src/main/keyStore.ts`, `packages/agent-runtime/src/agents/
+  anthropicCognitionPort.ts`, adapted from pango07/flicky, MIT). No server-
+  side budget ledger enforces this path — only the client-side per-task
+  budget in `packages/agent-runtime/src/budget.ts`.
 - **Voice:** Web Speech API, not the local sherpa-onnx pipeline — see the
   header comment in `src/renderer/src/lib/voice.ts`. Push-to-talk and text
   input are the reliable path.

@@ -10,21 +10,30 @@
 import { app, globalShortcut, ipcMain } from 'electron';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { KlipAgentRuntime } from '@klip/agent-runtime';
-import { SetExpandedSchema } from '@klip/contracts';
+import { KlipAgentRuntime, AnthropicCognitionPort } from '@klip/agent-runtime';
+import { SetExpandedSchema, SetApiKeySchema, DeleteApiKeySchema, SetShortcutSchema } from '@klip/contracts';
 import { createCompanionWindow, resizeAndReposition } from './window.js';
 import { registerIpcHandlers } from './ipc.js';
 import { createTray } from './tray.js';
 import { ElectronOpener } from './electronOpener.js';
+import { getApiKey, setApiKey, deleteApiKey, getKeyStatus, isEncryptionAvailable } from './keyStore.js';
+import { loadSettings, saveSettings } from './settingsStore.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 let expanded = false;
 
 app.whenReady().then(async () => {
+  const settings = loadSettings();
+
   const runtime = new KlipAgentRuntime({
     dataDir: path.join(app.getPath('userData'), 'klip-data'),
     opener: new ElectronOpener(),
+    // Real reasoning today via a direct Anthropic key, if the user adds one
+    // in Settings — falls back to the honest NullCognitionPort otherwise.
+    // See packages/agent-runtime/src/agents/anthropicCognitionPort.ts for
+    // why this is an interim path, not the docs/08 AWS-metered proxy.
+    cognition: new AnthropicCognitionPort({ getApiKey: () => getApiKey('anthropic') }),
   });
   await runtime.init();
 
@@ -60,10 +69,53 @@ app.whenReady().then(async () => {
     return { expanded };
   });
 
+  // ── API key management (encrypted local storage, see keyStore.ts) ──────
+  ipcMain.handle('klip:getKeyStatus', async () => ({ ...getKeyStatus(), encryptionAvailable: isEncryptionAvailable() }));
+  ipcMain.handle('klip:setApiKey', async (_evt, raw) => {
+    const input = SetApiKeySchema.parse(raw);
+    setApiKey(input.name, input.apiKey);
+    return { ...getKeyStatus(), encryptionAvailable: isEncryptionAvailable() };
+  });
+  ipcMain.handle('klip:deleteApiKey', async (_evt, raw) => {
+    const input = DeleteApiKeySchema.parse(raw);
+    deleteApiKey(input.name);
+    return { ...getKeyStatus(), encryptionAvailable: isEncryptionAvailable() };
+  });
+
+  // ── Customizable expand/collapse hotkey ─────────────────────────────────
+  let currentAccelerator = settings.expandAccelerator;
+  const registerExpandHotkey = (accelerator: string) => {
+    try {
+      globalShortcut.unregister(currentAccelerator);
+    } catch {
+      /* may already be unregistered */
+    }
+    const ok = globalShortcut.register(accelerator, toggleExpanded);
+    if (ok) {
+      currentAccelerator = accelerator;
+      saveSettings({ ...loadSettings(), expandAccelerator: accelerator });
+    }
+    return ok;
+  };
+  registerExpandHotkey(currentAccelerator);
+
+  ipcMain.handle('klip:getShortcut', async () => ({ accelerator: currentAccelerator }));
+  ipcMain.handle('klip:setShortcut', async (_evt, raw) => {
+    const input = SetShortcutSchema.parse(raw);
+    const ok = registerExpandHotkey(input.accelerator);
+    return { ok, accelerator: currentAccelerator };
+  });
+  ipcMain.handle('klip:suspendShortcut', async () => {
+    globalShortcut.unregister(currentAccelerator);
+    return { ok: true };
+  });
+  ipcMain.handle('klip:resumeShortcut', async () => {
+    globalShortcut.register(currentAccelerator, toggleExpanded);
+    return { ok: true };
+  });
+
   createTray(win, runtime, toggleExpanded);
 
-  // Global hotkey toggles the panel even when collapsed (docs/03-SRS.md FR-U-03).
-  globalShortcut.register('CommandOrControl+Shift+K', toggleExpanded);
   // Explicit stop control reachable even when the panel is collapsed (docs/09 section 10).
   globalShortcut.register('CommandOrControl+Shift+Escape', () => {
     win.webContents.send('klip:stop-requested');

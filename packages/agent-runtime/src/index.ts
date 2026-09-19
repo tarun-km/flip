@@ -182,6 +182,25 @@ export class KlipAgentRuntime extends EventEmitter {
       usage: [],
     });
 
+    if (result.route === 'local-command' || result.route === 'local-model') {
+      await this.memory.recordUsage({
+        id: newId(),
+        requestId: newId(),
+        taskId,
+        agent: result.agent,
+        route: result.route,
+        provider: 'none',
+        inputTokens: null,
+        outputTokens: null,
+        cacheReadTokens: null,
+        cacheWriteTokens: null,
+        estimatedCostMicrousd: 0,
+        reservedMicrousd: 0,
+        state: 'local',
+        createdAt: nowIso(),
+      });
+    }
+
     return result;
   }
 
@@ -303,6 +322,7 @@ export class KlipAgentRuntime extends EventEmitter {
         const result = await this.conversationAgent.openEnded(taskId, node.instruction);
         responseText = result.text;
         this.emitEvent('usage.updated', result.usage, taskId);
+        await this.memory.recordUsage(result.usage);
         this.setState('speaking');
         return { nodeId: node.id, status: 'completed', outputs: { text: result.text }, evidenceActionIds: [] };
       }
@@ -337,3 +357,4 @@ export * from './scheduler.js';
 export * from './agents/desktop.js';
 export * from './agents/conversation.js';
 export * from './agents/supervisor.js';
+export * from './agents/anthropicCognitionPort.js';

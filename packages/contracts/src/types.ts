@@ -280,7 +280,11 @@ export interface UsageRecord {
   taskId: Id;
   agent: AgentId;
   route: Route;
-  provider: 'none' | 'local' | 'bedrock';
+  // 'anthropic'/'openai' are an H24 baseline extension for the direct-API
+  // interim cognition path (packages/agent-runtime/src/agents/
+  // anthropicCognitionPort.ts) — not in the original docs/10 enum, which only
+  // anticipated the metered Bedrock proxy ('bedrock').
+  provider: 'none' | 'local' | 'bedrock' | 'anthropic' | 'openai';
   modelId?: string;
   inputTokens: number | null;
   outputTokens: number | null;

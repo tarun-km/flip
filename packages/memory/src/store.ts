@@ -117,7 +117,7 @@ export class MemoryStore {
     let localCount = 0;
     let cloudCount = 0;
     for (const r of rows) {
-      if (r.provider === 'bedrock') {
+      if (r.provider !== 'none' && r.provider !== 'local') {
         cloudCount++;
         if (r.state === 'settled') settledMicrousd += r.estimatedCostMicrousd ?? 0;
         if (r.state === 'reserved') reservedMicrousd += r.reservedMicrousd;

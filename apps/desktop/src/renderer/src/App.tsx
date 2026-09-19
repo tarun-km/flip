@@ -5,6 +5,7 @@ import { Companion } from './components/Companion';
 import { StatusBadges } from './components/StatusBadges';
 import { ConversationPanel } from './components/ConversationPanel';
 import { HistoryUsagePanel } from './components/HistoryUsagePanel';
+import { SettingsTab } from './components/SettingsTab';
 import { ApprovalModal } from './components/ApprovalModal';
 
 export default function App() {
@@ -63,13 +64,9 @@ export default function App() {
             <Companion state={status.state} speechLevel={status.speechLevel} inputLevel={0} reducedMotion={false} />
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontSize: 13, fontWeight: 700 }}>KLIP</div>
+            <div style={{ fontSize: 15, fontWeight: 500, fontFamily: 'var(--klip-font-display)', letterSpacing: 0.3 }}>KLIP</div>
             <StatusBadges status={status} />
           </div>
-          <nav style={{ display: 'flex', gap: 4 }}>
-            <TabButton active={activeView === 'conversation'} onClick={() => setActiveView('conversation')} label="Chat" />
-            <TabButton active={activeView === 'history'} onClick={() => setActiveView('history')} label="History" />
-          </nav>
           <button
             onClick={() => setExpanded(false)}
             aria-label="Collapse KLIP"
@@ -79,12 +76,16 @@ export default function App() {
           </button>
         </header>
 
+        <nav style={{ display: 'flex', gap: 4, padding: '8px 12px 0' }} data-no-drag>
+          <TabButton active={activeView === 'conversation'} onClick={() => setActiveView('conversation')} label="Chat" />
+          <TabButton active={activeView === 'history'} onClick={() => setActiveView('history')} label="Dashboard" />
+          <TabButton active={activeView === 'settings'} onClick={() => setActiveView('settings')} label="Settings" />
+        </nav>
+
         <div style={{ flex: 1, minHeight: 0 }}>
-          {activeView === 'conversation' ? (
-            <ConversationPanel onSubmit={submit} muted={status.microphone === 'muted'} onToggleMute={toggleMute} />
-          ) : (
-            <HistoryUsagePanel />
-          )}
+          {activeView === 'conversation' && <ConversationPanel onSubmit={submit} muted={status.microphone === 'muted'} onToggleMute={toggleMute} />}
+          {activeView === 'history' && <HistoryUsagePanel />}
+          {activeView === 'settings' && <SettingsTab />}
         </div>
       </div>
 
@@ -98,12 +99,15 @@ function TabButton({ active, onClick, label }: { active: boolean; onClick: () =>
     <button
       onClick={onClick}
       style={{
-        fontSize: 11,
-        padding: '4px 8px',
-        borderRadius: 8,
+        fontSize: 12,
+        fontWeight: active ? 700 : 500,
+        padding: '6px 4px 10px',
+        borderRadius: 0,
         border: 'none',
-        background: active ? 'var(--klip-raised)' : 'transparent',
+        borderBottom: active ? '2px solid var(--klip-accent)' : '2px solid transparent',
+        background: 'transparent',
         color: active ? 'var(--klip-text-primary)' : 'var(--klip-text-secondary)',
+        marginRight: 14,
       }}
     >
       {label}

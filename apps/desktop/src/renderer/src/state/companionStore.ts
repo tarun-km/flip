@@ -16,7 +16,7 @@ interface CompanionStoreState {
   history: HistoryTaskEntry[];
   usage: { rows: UsageRecord[]; totals: { settledMicrousd: number; reservedMicrousd: number; localCount: number; cloudCount: number } };
   historyEnabled: boolean;
-  activeView: 'conversation' | 'history';
+  activeView: 'conversation' | 'history' | 'settings';
 
   setStatus: (status: CompanionStatus) => void;
   setExpanded: (expanded: boolean) => void;
@@ -25,7 +25,7 @@ interface CompanionStoreState {
   setHistory: (history: HistoryTaskEntry[]) => void;
   setUsage: (usage: CompanionStoreState['usage']) => void;
   setHistoryEnabled: (enabled: boolean) => void;
-  setActiveView: (view: 'conversation' | 'history') => void;
+  setActiveView: (view: 'conversation' | 'history' | 'settings') => void;
 }
 
 export const useCompanionStore = create<CompanionStoreState>((set) => ({
